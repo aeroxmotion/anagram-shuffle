@@ -6,12 +6,12 @@ const WORD_SPLITTER = ''
 const LETTERS_REGEX = /^[a-z]+$/i
 
 export function getAnagramCombinations (word: string): Combinations {
-  if (!LETTERS_REGEX.test(word)) {
-    throw new SyntaxError('Only english letters accepted')
-  }
-
   if (typeof word !== 'string' || word.length < 2) {
     throw new Error('Invalid word input')
+  }
+
+  if (!LETTERS_REGEX.test(word)) {
+    throw new SyntaxError('Only english letters accepted')
   }
 
   const combinations: Combinations = new Set()
@@ -21,19 +21,16 @@ export function getAnagramCombinations (word: string): Combinations {
   return combinations
 }
 
-export function addCombinationsByShuffle (starting: string, letters: string[], combinations: Combinations) {
+function addCombinationsByShuffle (starting: string, letters: string[], combinations: Combinations) {
   if (!letters.length) {
     combinations.add(starting)
     return
   }
 
   for (let i = 0; i < letters.length; i++) {
-    const newLetters = letters.slice()
-    newLetters.splice(i, 1)
-
     addCombinationsByShuffle(
       starting + letters[i],
-      newLetters, 
+      letters.filter((_, index) => index !== i), 
       combinations
     )
   }
